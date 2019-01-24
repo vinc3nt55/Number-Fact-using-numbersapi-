@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>Number Facts API</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<style>
+		#fact{
+			display: none;
+		}
+		.btn{
+			background-color: #6c757d;
+			color: #fff;
+		}
+		.btn:hover{
+			background-color: green;
+			color: #fff;
+		}
+		.active{
+			background-color: green;
+			color: #fff;
+		}
+	</style>
+</head>
+	<body class="bg-dark">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 mx-auto">
+					<div class="card bg-primary text-white mt-5 p-4">
+						<h1>Number Facts</h1>
+						<div class="row">
+						<h2 id="category"></h2>
+							<div id="btnContainer" class="col">
+								<button id="trivia" class="btn active">Trivia</button>
+								<button id="date" class="btn">Date</button>
+								<button id="math" class="btn">Math</button>
+							</div>
+						</div>
+						<p>Enter a Number get a Random Fact</p>
+						<input id="numberInput" class="form-control-lg" type="number" placeholder="Enter Number">
+						<div id="fact" class="card-body">
+							<h4 id="catTitle" class="card-title">Number Fact</h4>
+							<p id="factTxt" class="card-text"></p>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	<script>
+		const fact = document.querySelector('#fact');
+		const factTxt = document.querySelector('#factTxt');
+		const numberInput = document.querySelector('#numberInput');
+		const category = document.querySelector('#category');
+		const catTitle = document.querySelector('#catTitle');
+		const trivia = document.querySelector('#trivia');
+		const date = document.querySelector('#date');
+		const math = document.querySelector('#math');
+		let value = '';
+
+		numberInput.addEventListener('input', getFactAjax);
+		// Btn
+		const btn = document.querySelectorAll('button');
+		btn.forEach(btn => {
+			btn.addEventListener('click', () => {
+				catTitle.innerText = `${btn.innerHTML} Fact`;
+				value = btn.innerHTML.toLowerCase();
+				if(value === 'trivia') {
+					trivia.classList.add('active');
+					date.classList.remove('active');
+					math.classList.remove('active');
+				}else if(value === 'math') {
+					math.classList.add('active');
+					trivia.classList.remove('active');
+					date.classList.remove('active');
+				}else if(value === 'date') {
+					date.classList.add('active');
+					math.classList.remove('active');
+					trivia.classList.remove('active');
+				}else{
+					trivia.classList.remove('active');
+					date.classList.remove('active');
+					math.classList.remove('active');
+				}
+			});
+		});
+		// Getting the API
+		function getFactAjax() {
+			let number = numberInput.value;
+
+			axios.get(`http://numbersapi.com/${number}/${value}`)
+			.then(data => data.data)
+			.then(data => {
+				if(number !== '') {
+					fact.style.display = 'block';
+					factTxt.innerText = data;
+				}else if(number === '') {
+					fact.style.display = 'none';
+				}
+			})
+			.catch(err => console.log(err))
+		}
+	</script>
+	</body>
+</html>
