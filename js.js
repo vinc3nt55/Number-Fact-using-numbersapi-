@@ -38,7 +38,7 @@ const fact = document.querySelector('#fact');
 		function getFactAjax() {
 			let number = numberInput.value;
 
-			axios.get(`https://numbersapi.com/${number}/${value}`)
+			axios.get(`http://numbersapi.com/${number}/${value}`)
 			.then(data => data.data)
 			.then(data => {
 				if(number !== '') {
